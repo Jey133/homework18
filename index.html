@@ -49,8 +49,8 @@ function getShipsList (filmName, filmItem) {
 	if (filmItem.getElementsByTagName('ul').length == 0) {
 		let filmShipsList = document.createElement('ul');
 
-		var filmObj = filmsArr.find(film =>film.title == filmName );
-		var filmStarShipsURLArr = filmObj.starships;
+		let filmObj = filmsArr.find(film =>film.title == filmName );
+		let filmStarShipsURLArr = filmObj.starships;
 
 		filmStarShipsURLArr.forEach(shipURL => {
 			let ship =  shipsArr.find(ship => ship.url === shipURL);
