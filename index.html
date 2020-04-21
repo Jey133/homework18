@@ -9,63 +9,65 @@
 <div id="film" class="films"></div>
 	
 <script>
-
+	
 let shipsArr = [];
 let filmsArr = [];
 
 function fetchData () {
-	let filmData = fetch('https://swapi.co/api/films/');
-	filmData.then(response => response.json())
-	.then(res => generateList(res.results));
+	let filmData = fetch('https://swapi.py4e.com/api/films/');
+	filmData.then(response => response.json()).then(res => generateList(res.results));
 
-	let shipData = fetch('https://swapi.co/api/ships/');
-	shipData.then(response => response.json())
-	.then(res => shipsArr[res.results]);
+	let shipData = fetch('https://swapi.py4e.com/api/starships/');
+	shipData.then(response => response.json()).then(res =>  shipsArr = res.results);
 };
 
 function generateList (arr) {
-	filmsArr[arr];
+	filmsArr = arr;
 	let films = document.getElementById('film');
 	let filmsList = document.createElement('ul');
-	let list ="";
 
-	for (let i = 0; i < arr.length; i++) {
-
+	filmsArr.forEach(film => {
 		const filmItem = document.createElement('li');
 		const filmItemContent = document.createElement('span');
-		filmItemContent.innerText = arr[i].title;
+		filmItemContent.innerText = film.title;
 
-    	filmItem.appendChild(filmItemContent);
-   		filmItem.setAttribute('data-id', arr[i].title);		
+		filmItem.appendChild(filmItemContent);
+	    	filmItem.setAttribute('data-id', film.title);
 		filmItem.addEventListener('click', (e) => {
 			let filmName = e.currentTarget.getAttribute('data-id');
 			getShipsList(filmName, filmItem);
 		});
+
 		filmsList.append(filmItem);
-	};
+	});
 	film.append(filmsList);
+	
 };
 
 function getShipsList (filmName, filmItem) {
-	for (let i = 0; i < filmsArr.length; i++) {
-		let filmShipsList = document.createElement('ul');
-		if(filmsArr[i].title === filmName){
-			let filmShipArr = filmsArr[i].starships;
-			for (let j = 0; j < filmShipArr.length; j++) {
-				for (let k = 0; k < shipsArr.length; k++) {
-					if(filmShipArr[j] === shipsArr[k].url ) {
-						const shipItem = document.createElement('li');
-						const shipItemContent = document.createElement('span');
-						shipItemContent.innerText = shipsArr[k].name;
 
-				    	shipItem.appendChild(shipItemContent);
-						filmShipsList.append(shipItem);
-					}
-				}
+	if (filmItem.getElementsByTagName('ul').length == 0) {
+		let filmShipsList = document.createElement('ul');
+
+		var filmObj = filmsArr.find(film =>film.title == filmName );
+		var filmStarShipsURLArr = filmObj.starships;
+
+		filmStarShipsURLArr.forEach(shipURL => {
+			let ship =  shipsArr.find(ship => ship.url === shipURL);
+			if(ship) {
+				let shipName = ship.name;
+
+				const shipItem = document.createElement('li');
+				const shipItemContent = document.createElement('span');
+
+				shipItemContent.innerText = shipName;
+
+				shipItem.appendChild(shipItemContent);
+				filmShipsList.append(shipItem);
+				filmItem.append(filmShipsList);
 			}
-		}
+		});
 	}
-	filmItem.append(filmShipsList);
 };
 
 console.log(fetchData());
